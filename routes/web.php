@@ -19,10 +19,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::middleware(['auth:sanctum', 'verified', 'hoca'])->group(function () {
+    // Sadece "hoca" rolüne sahip kullanıcılara erişilebilen rotalar
+    Route::post('/notguncelle/{id}', [StudentController::class, 'edit'])->name('notguncelle');
+    Route::get('/notformu', [NotController::class, 'show'])->name('notform');
+    Route::post('/notgonder', [StudentController::class, 'notlar'])->name('notformgonder');
+});
+
 
      Route::get('/studentlist', [StudentController::class, 'index'])->name('studentlist');
-     Route::get('/notformu', [NotController::class, 'show'])->name('notform');
-      Route::post('/notgonder', [NotController::class, 'notlar'])->name('notformgonder');
+      Route::get('/student/detail/{id}', [StudentController::class, 'detail'])->name('studentdetail');
 
 Route::middleware([
     'auth:sanctum',
@@ -30,6 +36,6 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('front.ogrenciler');
     })->name('dashboard');
 });
